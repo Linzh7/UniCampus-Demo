@@ -38,11 +38,11 @@ Generated.xcconfig
 flutter_export_environment.sh
 project.pbxproj
 
-./Android/*
-./iOS/*
-./web/*
-./debug/*
-./build/*
-./.idea/*
-./.dart_tool/*
+Android/
+iOS/
+web/
+debug/
+build/
+.idea/
+.dart_tool/
 
