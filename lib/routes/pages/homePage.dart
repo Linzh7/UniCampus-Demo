@@ -495,62 +495,69 @@ class _HomePage extends State<HomePage> {
                           child: Text("Settings")
                         ),
                         children: [
-                          Text("Start day of this semester:"),
-                          Row(
-                            children: [
-                              Container(
-                                height:20,
-                                width: 50,
-                                child: TextField(
-                                  textAlign: TextAlign.center,
-                                  decoration:
-                                  InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(vertical: -25.0),
-                                    hintText: ("DD"),
-                                  ),
-                                  controller: _startDayController,
-                                  maxLines: 1,
-                                  textInputAction: TextInputAction.done,
-                                  keyboardType: TextInputType.number,
+                          Container(
+                            margin: EdgeInsets.fromLTRB(20,0,20,0),
+                            child: Column(
+                              children: [
+                                Text("Start day of this semester:"),
+                                Row(
+                                  children: [
+                                    Container(
+                                      height:20,
+                                      width: 50,
+                                      child: TextField(
+                                        textAlign: TextAlign.center,
+                                        decoration:
+                                        InputDecoration(
+                                          contentPadding: const EdgeInsets.symmetric(vertical: -25.0),
+                                          hintText: ("DD"),
+                                        ),
+                                        controller: _startDayController,
+                                        maxLines: 1,
+                                        textInputAction: TextInputAction.done,
+                                        keyboardType: TextInputType.number,
+                                      ),
+                                    ),
+                                    Text("/"),
+                                    Container(
+                                      height:20,
+                                      width: 50,
+                                      child: TextField(
+                                        textAlign: TextAlign.center,
+                                        decoration:
+                                        InputDecoration(
+                                          contentPadding: const EdgeInsets.symmetric(vertical: -25.0),
+                                          hintText: ("MM"),
+                                        ),
+                                        controller: _startMonthController,
+                                        maxLines: 1,
+                                        textInputAction: TextInputAction.done,
+                                        keyboardType: TextInputType.number,
+                                      ),
+                                    ),
+                                    Text("/"),
+                                    Container(
+                                      height:20,
+                                      width: 50,
+                                      child: TextField(
+                                        textAlign: TextAlign.center,
+                                        decoration:
+                                        InputDecoration(
+                                          contentPadding: const EdgeInsets.symmetric(vertical: -25.0),
+                                          hintText: ("YYYY"),
+                                        ),
+                                        controller: _startYearController,
+                                        maxLines: 1,
+                                        textInputAction: TextInputAction.done,
+                                        keyboardType: TextInputType.number,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              Text("/"),
-                              Container(
-                                height:20,
-                                width: 50,
-                                child: TextField(
-                                  textAlign: TextAlign.center,
-                                  decoration:
-                                  InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(vertical: -25.0),
-                                    hintText: ("MM"),
-                                  ),
-                                  controller: _startMonthController,
-                                  maxLines: 1,
-                                  textInputAction: TextInputAction.done,
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                              Text("/"),
-                              Container(
-                                height:20,
-                                width: 50,
-                                child: TextField(
-                                  textAlign: TextAlign.center,
-                                  decoration:
-                                  InputDecoration(
-                                    contentPadding: const EdgeInsets.symmetric(vertical: -25.0),
-                                    hintText: ("YYYY"),
-                                  ),
-                                  controller: _startYearController,
-                                  maxLines: 1,
-                                  textInputAction: TextInputAction.done,
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                            ],
+                                SizedBox(height: 10,),
+                              ],
+                            ),
                           ),
-                          SizedBox(height: 10,),
                           ElevatedButton(
                             onPressed: () async {
                               SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -571,18 +578,33 @@ class _HomePage extends State<HomePage> {
                                     fontSize: 16.0
                                 );
                               }
-                              prefs.setInt("SemesterStartYear", year);
-                              prefs.setInt("SemesterStartMonth", month);
-                              prefs.setInt("SemesterStartDay", day);
-                              Fluttertoast.showToast(
-                                  msg: "Success",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 1,
-                                  // backgroundColor: Colors.blue,
-                                  // textColor: Colors.blueGrey,
-                                  fontSize: 16.0
-                              );
+                              var today = DateTime(year,month,day);
+                              if (today.weekday==1){
+                                prefs.setInt("SemesterStartYear", today.year);
+                                prefs.setInt("SemesterStartMonth", today.month);
+                                prefs.setInt("SemesterStartDay", today.day);
+                                Fluttertoast.showToast(
+                                    msg: "Success set at ${today.day}/${today.month}/${today.year}",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    // backgroundColor: Colors.blue,
+                                    // textColor: Colors.blueGrey,
+                                    fontSize: 16.0
+                                );
+                              }
+                              else{
+                                print(today);
+                                Fluttertoast.showToast(
+                                    msg: "Start day have to be Monday",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    // backgroundColor: Colors.blue,
+                                    // textColor: Colors.blueGrey,
+                                    fontSize: 16.0
+                                );
+                              }
                             },
                             child: Text('Update'),
                           ),
