@@ -320,7 +320,8 @@ class _classCube extends State<ClassCube> {
                                   timeInSecForIosWeb: 1,
                                   // backgroundColor: Colors.blue,
                                   // textColor: Colors.blueGrey,
-                                  fontSize: 16.0);
+                                  fontSize: 16.0
+                              );
                                // initState();
                             },
                             child: Text('删除'),

@@ -2,6 +2,7 @@ import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_campus/Resource/classIndexMap.dart';
 import 'package:uni_campus/models/course.dart';
@@ -30,6 +31,15 @@ class _HomePage extends State<HomePage> {
   // 下拉框选择的当前数
   var selectedItem;
 
+  final TextEditingController _startDayController = TextEditingController();
+  final TextEditingController _startMonthController = TextEditingController();
+  final TextEditingController _startYearController = TextEditingController();
+
+  init(){
+    _startDayController.text = DateCalculator.startDay.toString();
+    _startMonthController.text = DateCalculator.startMonth.toString();
+    _startYearController.text = DateCalculator.startYear.toString();
+  }
 
   // 提供统一高度的按钮图片
   Image buttonImageProvider(AssetImage img) {
@@ -106,6 +116,8 @@ class _HomePage extends State<HomePage> {
 
   DateTime _now = DateTime.now();
   bool isShowDialog = false;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -469,6 +481,117 @@ class _HomePage extends State<HomePage> {
               borderRadius: BorderRadius.circular(20),
             ),
             children: <Widget>[
+              Center(
+                child: SimpleDialogOption(
+                  child: new Text(
+                    'Settings',
+                    style: TextStyle(fontSize: 21),
+                  ),
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (BuildContext context){
+                      return SimpleDialog(
+                        title: Center(
+                          child: Text("Settings")
+                        ),
+                        children: [
+                          Text("Start day of this semester:"),
+                          Row(
+                            children: [
+                              Container(
+                                height:20,
+                                width: 50,
+                                child: TextField(
+                                  textAlign: TextAlign.center,
+                                  decoration:
+                                  InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(vertical: -25.0),
+                                    hintText: ("DD"),
+                                  ),
+                                  controller: _startDayController,
+                                  maxLines: 1,
+                                  textInputAction: TextInputAction.done,
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ),
+                              Text("/"),
+                              Container(
+                                height:20,
+                                width: 50,
+                                child: TextField(
+                                  textAlign: TextAlign.center,
+                                  decoration:
+                                  InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(vertical: -25.0),
+                                    hintText: ("MM"),
+                                  ),
+                                  controller: _startMonthController,
+                                  maxLines: 1,
+                                  textInputAction: TextInputAction.done,
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ),
+                              Text("/"),
+                              Container(
+                                height:20,
+                                width: 50,
+                                child: TextField(
+                                  textAlign: TextAlign.center,
+                                  decoration:
+                                  InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(vertical: -25.0),
+                                    hintText: ("YYYY"),
+                                  ),
+                                  controller: _startYearController,
+                                  maxLines: 1,
+                                  textInputAction: TextInputAction.done,
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10,),
+                          ElevatedButton(
+                            onPressed: () async {
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              var day, month, year;
+                              try{
+                                day = int.parse(_startDayController.text);
+                                month = int.parse(_startMonthController.text);
+                                year = int.parse(_startYearController.text);
+                              }catch (e){
+                                LogUtil.e('[SemesterInfo] Update fail. Because the input cannot parse into int.');
+                                Fluttertoast.showToast(
+                                    msg: "Type Error",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    // backgroundColor: Colors.blue,
+                                    // textColor: Colors.blueGrey,
+                                    fontSize: 16.0
+                                );
+                              }
+                              prefs.setInt("SemesterStartYear", year);
+                              prefs.setInt("SemesterStartMonth", month);
+                              prefs.setInt("SemesterStartDay", day);
+                              Fluttertoast.showToast(
+                                  msg: "Success",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.CENTER,
+                                  timeInSecForIosWeb: 1,
+                                  // backgroundColor: Colors.blue,
+                                  // textColor: Colors.blueGrey,
+                                  fontSize: 16.0
+                              );
+                            },
+                            child: Text('Update'),
+                          ),
+                        ],
+                      );
+                    }
+                  )
+                ),
+              ),
               Center(
                 child: SimpleDialogOption(
                   child: new Text(
